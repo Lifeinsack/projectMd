@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/dist/css/bootstrap.css' />
+  <script src="/javascripts/jquery-2.1.0.js"></script>
+  <script src="/dist/js/bootstrap.js"></script>
+  <script>
+    $(function(){
+        $('#btn').on('click',function () {
+            var pzurl=$('#pzurl').val();
+            var pzname = $('#pzname').val();
+            if(pzname!='' && pzurl!=''){
+                $.ajax({
+                    url:'/type',
+                    data:{name:pzname,url:pzurl},
+                    dataType:'json',
+                    type:'get',
+                    success:function(data){
+                        $('#myModal').modal('hide');
+                        $('#pzname').val("");
+                        viewtitle(data.Name);
+                        console.log(data);
+                    }
+              });
+            }
+            else{
+                alert("请输入"+'<%= PzName %>');
+            }
+        })
+
+        function viewtitle (name) {
+            $('.view').append("<div class='view'><span>"+name+"</span><button>抓取</button><button>修改</button><button id='delete_pz'>删除</button></div>");
+            $('#delete_pz').on('click',function () {
+                $(this).parent().remove('.view')
+            })
+        }
+    })
+  </script>
+</head>
+<body>
+<header><%= title %></header>
+<section>
+<h1 class="view">已有配置:</h1>
+
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    新增配置
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">新增配置</h4>
+        </div>
+        <div class="modal-body">
+          <div class="pz_title">
+            <div class="pz_left" ><sapn><%= PzName %></span></div><input placeholder="请输入项目名称" type="text" id="pzname">
+            </div>
+          <div class="pz_title">
+            <div class="pz_left" ><sapn><%= PzUrl %></span></div><input placeholder="请输入项目链接" type="text" id="pzurl">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="btn">提交配置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
